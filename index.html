@@ -543,8 +543,9 @@
           <span id="addressLine">Конкретную точку выберем вместе — так, чтобы было удобно, спокойно и без лишней суеты.</span>
         </p>
         <div class="btns">
-          <a class="btn secondary" id="btnMaps" href="#" target="_blank" rel="noopener">🗺️ Открыть город на карте</a>
-        </div>
+  <a class="btn secondary" id="btnMaps" href="#" target="_blank" rel="noopener">🗺️ Открыть адекватный вариант</a>
+  <a class="btn secondary" id="btnWildMaps" href="#" target="_blank" rel="noopener">🧭 Открыть не совсем адекватный вариант</a>
+</div>
       </div>
 
       <div class="card two reveal">
@@ -782,6 +783,7 @@
       $("placeName").textContent = CONFIG.city;
       $("addressLine").textContent = CONFIG.addressLine;
       $("btnMaps").href = makeGoogleMapsLink(CONFIG.mapsQuery);
+      $("btnWildMaps").href = makeGoogleMapsLink("Мыс Желания, Карское море");
 
       if (CONFIG.playlistUrl){
         $("btnPlaylist").href = CONFIG.playlistUrl;
