@@ -220,6 +220,17 @@
       font-size:13px;
     }
 
+    .mode-pill{
+      cursor:pointer;
+      color:var(--text);
+      transition:.2s ease;
+    }
+
+    .mode-pill:hover{
+      transform:translateY(-1px);
+      border-color:rgba(215,199,255,.35);
+    }
+
     .grid{
       margin-top:18px;
       display:grid;
@@ -235,6 +246,17 @@
       padding:16px;
       box-shadow:var(--shadow);
       backdrop-filter:blur(10px);
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(18px);
+      transition:opacity .65s ease, transform .65s ease;
+    }
+
+    .reveal.show{
+      opacity:1;
+      transform:translateY(0);
     }
 
     .two{grid-column:span 12}
@@ -293,6 +315,23 @@
       font-size:25px;
       font-weight:800;
       color:var(--accent);
+      animation:pulseQuestion 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulseQuestion{
+      0%,100%{transform:scale(1);opacity:.85}
+      50%{transform:scale(1.18);opacity:1}
+    }
+
+    .shake{
+      animation:shake .35s ease;
+    }
+
+    @keyframes shake{
+      0%,100%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
     }
 
     .lbl{
@@ -354,26 +393,62 @@
       line-height:1.7;
     }
 
-    .status-grid{
-      display:grid;
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
       gap:10px;
       margin-top:10px;
     }
 
-    .status-item{
+    .chip{
+      padding:9px 11px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.045);
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .chip b{
+      color:var(--text);
+      font-weight:650;
+    }
+
+    .progress-wrap{
+      margin-top:14px;
+      padding:12px;
+      border-radius:16px;
+      background:rgba(255,255,255,.045);
+      border:1px solid var(--stroke);
+    }
+
+    .progress-top{
       display:flex;
       justify-content:space-between;
       gap:12px;
-      padding:10px 12px;
-      border-radius:14px;
-      background:rgba(255,255,255,.045);
-      border:1px solid var(--stroke);
       color:var(--muted);
+      font-size:13px;
+      margin-bottom:9px;
     }
 
-    .status-item b{
-      color:var(--text);
-      font-weight:650;
+    .progress-bar{
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .progress-fill{
+      height:100%;
+      width:37%;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      animation:progressGlow 2.2s ease-in-out infinite;
+    }
+
+    @keyframes progressGlow{
+      0%,100%{filter:brightness(1)}
+      50%{filter:brightness(1.25)}
     }
 
     footer{
@@ -449,11 +524,12 @@
       <div class="row">
         <span class="pill">🕰 дата: в процессе</span>
         <span class="pill">📍 Екатеринбург</span>
+        <button class="pill mode-pill" id="modeBtn">🎛 режим: спокойный</button>
       </div>
     </div>
 
     <div class="grid">
-      <div class="card two">
+      <div class="card two reveal">
         <h2>⏳ Тут должен был быть обратный отсчёт</h2>
         <p class="kv">
           <b>Но цифры пока решили не торопить события.</b><br>
@@ -472,7 +548,7 @@
         </div>
       </div>
 
-      <div class="card two">
+      <div class="card two reveal">
         <h2>📍 Где</h2>
         <p class="kv">
           <b id="placeName">Екатеринбург</b><br>
@@ -483,7 +559,7 @@
         </div>
       </div>
 
-      <div class="card two">
+      <div class="card two reveal">
         <h2>🕰 Когда</h2>
         <p class="kv">
           <b>После короткого раунда переговоров.</b><br>
@@ -491,24 +567,36 @@
         </p>
       </div>
 
-      <div class="card two">
+      <div class="card two reveal">
         <h2>👟 Формат</h2>
         <p class="kv" id="dressText"></p>
         <div class="sep"></div>
         <p class="small">Главное — чтобы было легко, спокойно и по-человечески.</p>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <h2>📊 Статус плана</h2>
-        <div class="status-grid">
-          <div class="status-item"><span>Степень готовности</span><b>интригующая</b></div>
-          <div class="status-item"><span>Риск неловкого молчания</span><b>контролируемый</b></div>
-          <div class="status-item"><span>Вероятность хорошего вечера</span><b>подозрительно высокая</b></div>
-          <div class="status-item"><span>Уровень официальности</span><b>почти нулевой</b></div>
+        <div class="chips">
+          <span class="chip">готовность: <b>37%</b></span>
+          <span class="chip">интрига: <b>активна</b></span>
+          <span class="chip">официальность: <b>почти ноль</b></span>
+          <span class="chip">риск молчания: <b>контролируемый</b></span>
+          <span class="chip">шанс хорошего вечера: <b>подозрительный</b></span>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-top">
+            <span>Готовность переговоров</span>
+            <b>37%</b>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <p class="small" style="margin-top:9px;">Оставшиеся 63% добираются в личке.</p>
         </div>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <h2>📄 Протокол переговоров</h2>
         <ol class="protocol">
           <li>Выбрать дату, когда никто не изображает занятость мирового уровня.</li>
@@ -518,7 +606,7 @@
         </ol>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <h2>🌙 Вайб</h2>
         <p class="kv" id="vibeText"></p>
         <div class="btns" id="playlistWrap">
@@ -526,15 +614,7 @@
         </div>
       </div>
 
-      <div class="card">
-        <h2>🎛 Режим серьёзности</h2>
-        <p class="kv" id="modeText">Сейчас включён сбалансированный режим: достаточно спокойно, но с подозрительной долей самоуверенности.</p>
-        <div class="btns">
-          <button class="btn secondary" id="modeBtn">Переключить режим</button>
-        </div>
-      </div>
-
-      <div class="card">
+      <div class="card reveal">
         <h2>📨 Выбор продолжения сценария</h2>
         <p class="kv">Один тап — и откроется Telegram с готовым сообщением. Дальше уже решим детали нормально.</p>
         <div class="btns" id="rsvpBtns"></div>
@@ -605,7 +685,7 @@
           setTimeout(() => {
             localStorage.setItem("inviteUnlocked_v3", "yes");
             lockScreen.classList.add("hidden");
-          }, 5500);
+          }, 5000);
         } else {
           error.textContent = "Пароль не тот. Персик пока не дозрел.";
           input.value = "";
@@ -678,14 +758,30 @@
       if (seriousMode){
         $("dressText").textContent = CONFIG.dressCodeFunny;
         $("vibeText").textContent = CONFIG.vibeFunny;
-        $("modeText").textContent = "Режим серьёзности выключен. Протокол ведётся с лёгкой наглостью, но в пределах допустимого.";
-        $("modeBtn").textContent = "Вернуть спокойный режим";
+        $("modeBtn").textContent = "🎛 режим: дерзкий";
       } else {
         $("dressText").textContent = CONFIG.dressCodeNormal;
         $("vibeText").textContent = CONFIG.vibeNormal;
-        $("modeText").textContent = "Сейчас включён сбалансированный режим: достаточно спокойно, но с подозрительной долей самоуверенности.";
-        $("modeBtn").textContent = "Переключить режим";
+        $("modeBtn").textContent = "🎛 режим: спокойный";
       }
+    }
+
+    function setupReveal(){
+      const cards = document.querySelectorAll(".reveal");
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting){
+            entry.target.classList.add("show");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      cards.forEach((card, index) => {
+        card.style.transitionDelay = `${Math.min(index * 70, 280)}ms`;
+        observer.observe(card);
+      });
     }
 
     function init(){
@@ -708,9 +804,13 @@
       applyMode();
       buildRSVP();
       setupPasswordLock();
+      setupReveal();
 
       document.querySelectorAll(".secret-q").forEach((box) => {
         box.addEventListener("click", () => {
+          box.classList.remove("shake");
+          void box.offsetWidth;
+          box.classList.add("shake");
           $("timerHint").classList.toggle("show");
         });
       });
@@ -718,6 +818,18 @@
       $("modeBtn").addEventListener("click", () => {
         seriousMode = !seriousMode;
         applyMode();
+
+        $("hSubtitle").textContent = "";
+        $("mainCursor").style.display = "inline-block";
+
+        typeInto(
+          $("hSubtitle"),
+          seriousMode ? CONFIG.subtitleFunny : CONFIG.subtitleNormal,
+          18,
+          () => {
+            $("mainCursor").style.display = "none";
+          }
+        );
       });
     }
 
