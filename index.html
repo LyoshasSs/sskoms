@@ -344,7 +344,7 @@
       </div>
 
       <div class="card">
-        <h2>✅ Перейти к переговорам</h2>
+        <h2>📨 Выбор продолжения сценария</h2>
         <p class="kv">Один тап — и откроется Telegram с готовым сообщением. Дальше уже решим детали нормально.</p>
         <div class="btns" id="rsvpBtns"></div>
         <div class="status" id="rsvpHint"></div>
@@ -363,62 +363,65 @@
       return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
     }
 
-    function buildRSVP(){
-      const wrap = $("rsvpBtns");
-      const msg = encodeURIComponent(CONFIG.confirmMessage);
+   function buildRSVP(){
+  const wrap = $("rsvpBtns");
 
-      if (!CONFIG.telegramUser){
-        $("rsvpHint").textContent = "Telegram пока не указан.";
-        return;
-      }
+  if (!CONFIG.telegramUser){
+    $("rsvpHint").textContent = "Telegram пока не указан.";
+    return;
+  }
 
-      const tgDeep = `tg://resolve?domain=${CONFIG.telegramUser}&text=${msg}`;
-      const tgWeb = `https://t.me/${CONFIG.telegramUser}?text=${msg}`;
+  // --- первое сообщение ---
+  const msg1 = encodeURIComponent(
+    "Лешенька, дорогой, так уж и быть, даю тебе шанс, начинаем обсуждение деталей"
+  );
 
-      const yesBtn = document.createElement("a");
-      yesBtn.className = "btn";
-      yesBtn.href = tgWeb;
-      yesBtn.textContent = "🙇🏼 Обсудить детали в Telegram";
+  // --- второе сообщение ---
+  const msg2 = encodeURIComponent(
+    "Лешенька, ты, конечно, чето в себя поверил, но так уж и быть, обсуждаем"
+  );
 
-      yesBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.location.href = tgDeep;
-        setTimeout(() => { window.location.href = tgWeb; }, 350);
-      });
+  // helper для создания tg-кнопок
+  function createTGButton(text, message, secondary = false){
+    const tgDeep = `tg://resolve?domain=${CONFIG.telegramUser}&text=${message}`;
+    const tgWeb = `https://t.me/${CONFIG.telegramUser}?text=${message}`;
 
-      const chatBtn = document.createElement("a");
-      chatBtn.className = "btn secondary";
-      chatBtn.href = `https://t.me/${CONFIG.telegramUser}`;
-      chatBtn.target = "_blank";
-      chatBtn.rel = "noopener";
-      chatBtn.textContent = "💬 Просто открыть чат";
+    const btn = document.createElement("a");
+    btn.className = secondary ? "btn secondary" : "btn";
+    btn.href = tgWeb;
+    btn.textContent = text;
 
-      wrap.appendChild(yesBtn);
-      wrap.appendChild(chatBtn);
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.location.href = tgDeep;
+      setTimeout(() => {
+        window.location.href = tgWeb;
+      }, 350);
+    });
 
-      $("rsvpHint").textContent = "Сообщение не отправится само — Telegram просто подставит текст.";
-    }
+    return btn;
+  }
 
-    function init(){
-      $("hTitle").textContent = CONFIG.title;
-      $("hSubtitle").textContent = CONFIG.subtitle;
+  // --- кнопка 1 ---
+  wrap.appendChild(
+    createTGButton(
+      "🙇🏼 Я согласна на дальнейшие переговоры",
+      msg1
+    )
+  );
 
-      $("placeName").textContent = CONFIG.city;
-      $("addressLine").textContent = CONFIG.addressLine;
+  // --- кнопка 2 ---
+  wrap.appendChild(
+    createTGButton(
+      "🤨 А не много ли на себя берешь, последствия вывезешь в случае чего?",
+      msg2,
+      true
+    )
+  );
 
-      $("dressText").textContent = CONFIG.dressCode;
-      $("vibeText").textContent = CONFIG.vibe;
-
-      $("btnMaps").href = makeGoogleMapsLink(CONFIG.mapsQuery);
-
-      if (CONFIG.playlistUrl){
-        $("btnPlaylist").href = CONFIG.playlistUrl;
-      } else {
-        $("playlistWrap").style.display = "none";
-      }
-
-      buildRSVP();
-    }
+  $("rsvpHint").textContent =
+    "Telegram просто откроет чат и подставит готовую фразу.";
+}
 
     init();
 
