@@ -56,6 +56,86 @@
       to{transform:translateY(-110vh) scale(1.35) rotate(18deg); opacity:0;}
     }
 
+    .lock-screen{
+      position:fixed;
+      inset:0;
+      z-index:999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      background:
+        radial-gradient(800px 600px at 20% 10%, rgba(215,199,255,.18), transparent 60%),
+        radial-gradient(800px 600px at 80% 30%, rgba(184,255,241,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+    }
+
+    .lock-card{
+      width:min(520px, 100%);
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:24px;
+      padding:20px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+    }
+
+    .type-text{
+      min-height:132px;
+      color:var(--muted);
+      line-height:1.65;
+      font-size:15px;
+      white-space:pre-wrap;
+    }
+
+    .cursor{
+      display:inline-block;
+      width:8px;
+      color:var(--accent);
+      animation: blink .8s infinite;
+    }
+
+    @keyframes blink{
+      0%, 45%{opacity:1;}
+      46%, 100%{opacity:0;}
+    }
+
+    .password-area{
+      display:none;
+      margin-top:14px;
+    }
+
+    .password-area.show{
+      display:block;
+      animation: fadeIn .5s ease forwards;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(8px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+
+    .lock-input{
+      width:100%;
+      margin-top:12px;
+      padding:13px 14px;
+      border-radius:14px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      outline:none;
+      font-size:15px;
+    }
+
+    .lock-error{
+      margin-top:10px;
+      font-size:13px;
+      color:#ffb7b7;
+      min-height:18px;
+    }
+
+    .hidden{display:none !important;}
+
     .wrap{
       max-width:860px;
       margin:0 auto;
@@ -155,9 +235,7 @@
       line-height:1.65;
     }
 
-    .kv b{
-      color:rgba(255,255,255,.92);
-    }
+    .kv b{color:rgba(255,255,255,.92);}
 
     .sep{
       height:1px;
@@ -261,6 +339,33 @@
 <body>
   <div class="floaters" id="floaters"></div>
 
+  <div class="lock-screen" id="lockScreen">
+    <div class="lock-card">
+      <div class="badge">🔐 контрольный пункт</div>
+      <h1 style="font-size:24px;">Доступ ограничен</h1>
+
+      <div class="type-text">
+        <span id="typedText"></span><span class="cursor">|</span>
+      </div>
+
+      <div class="password-area" id="passwordArea">
+        <input
+          class="lock-input"
+          id="passwordInput"
+          type="password"
+          placeholder="Введите пароль…"
+          autocomplete="off"
+        />
+
+        <div class="btns">
+          <button class="btn" id="unlockBtn">Открыть приглашение</button>
+        </div>
+
+        <div class="lock-error" id="lockError"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
     <script>
       const CONFIG = {
@@ -277,7 +382,7 @@
         playlistUrl: "https://music.yandex.com/album/22219022/track/103708380?ref_id=D99B554F-C9D4-4D02-875A-375B8DA665E4&utm_medium=copy_link",
 
         telegramUser: "theoriginalkarapyz",
-        confirmMessage: "Леш, звучит интересно. Давай обсудим детали 🙇🏼"
+        password: "мужчины - это нудно"
       };
     </script>
 
@@ -356,107 +461,163 @@
     </footer>
   </div>
 
- <script>
-  const $ = (id) => document.getElementById(id);
+  <script>
+    const $ = (id) => document.getElementById(id);
 
-  function makeGoogleMapsLink(query){
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-  }
-
-  function buildRSVP(){
-    const wrap = $("rsvpBtns");
-
-    if (!CONFIG.telegramUser){
-      $("rsvpHint").textContent = "Telegram пока не указан.";
-      return;
+    function normalizePassword(value){
+      return value.trim().toLowerCase().replace(/ё/g, "е").replace(/\s+/g, " ");
     }
 
-    const msg1 = encodeURIComponent(
-      "Лешенька, дорогой, так уж и быть, даю тебе шанс, начинаем обсуждение деталей"
-    );
+    function setupPasswordLock(){
+      const lockScreen = $("lockScreen");
+      const typedText = $("typedText");
+      const passwordArea = $("passwordArea");
+      const input = $("passwordInput");
+      const btn = $("unlockBtn");
+      const error = $("lockError");
 
-    const msg2 = encodeURIComponent(
-      "Лешенька, ты, конечно, чето в себя поверил, но так уж и быть, обсуждаем"
-    );
+      const introText = "На случай твоего излишнего любопытства раньше времени — тут тоже запоролил, не стоит аплодисментов, рад стараться. За паролем обращайся в личку, а пока чао персик, дозревай.";
 
-    function createTGButton(text, message, secondary = false){
-      const tgDeep = `tg://resolve?domain=${CONFIG.telegramUser}&text=${message}`;
-      const tgWeb = `https://t.me/${CONFIG.telegramUser}?text=${message}`;
+      if (localStorage.getItem("inviteUnlocked_v2") === "yes"){
+        lockScreen.classList.add("hidden");
+        return;
+      }
 
-      const btn = document.createElement("a");
-      btn.className = secondary ? "btn secondary" : "btn";
-      btn.href = tgWeb;
-      btn.textContent = text;
+      let i = 0;
 
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.location.href = tgDeep;
-        setTimeout(() => {
-          window.location.href = tgWeb;
-        }, 350);
+      function type(){
+        if (i < introText.length){
+          typedText.textContent += introText.charAt(i);
+          i++;
+          setTimeout(type, 38);
+        } else {
+          passwordArea.classList.add("show");
+          input.focus();
+        }
+      }
+
+      type();
+
+      function unlock(){
+        const entered = normalizePassword(input.value);
+        const correct = normalizePassword(CONFIG.password);
+
+        if (entered === correct){
+          localStorage.setItem("inviteUnlocked_v2", "yes");
+          lockScreen.classList.add("hidden");
+        } else {
+          error.textContent = "Пароль не тот. Персик пока не дозрел.";
+          input.value = "";
+          input.focus();
+        }
+      }
+
+      btn.addEventListener("click", unlock);
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") unlock();
       });
-
-      return btn;
     }
 
-    wrap.appendChild(
-      createTGButton(
-        "🙇🏼 Я согласна на дальнейшие переговоры",
-        msg1
-      )
-    );
-
-    wrap.appendChild(
-      createTGButton(
-        "🤨 А не много ли на себя берешь, последствия вывезешь в случае чего?",
-        msg2,
-        true
-      )
-    );
-
-    $("rsvpHint").textContent =
-      "Telegram просто откроет чат и подставит готовую фразу.";
-  }
-
-  function init(){
-    $("hTitle").textContent = CONFIG.title;
-    $("hSubtitle").textContent = CONFIG.subtitle;
-
-    $("placeName").textContent = CONFIG.city;
-    $("addressLine").textContent = CONFIG.addressLine;
-
-    $("dressText").textContent = CONFIG.dressCode;
-    $("vibeText").textContent = CONFIG.vibe;
-
-    $("btnMaps").href = makeGoogleMapsLink(CONFIG.mapsQuery);
-
-    if (CONFIG.playlistUrl){
-      $("btnPlaylist").href = CONFIG.playlistUrl;
-    } else {
-      $("playlistWrap").style.display = "none";
+    function makeGoogleMapsLink(query){
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
     }
 
-    buildRSVP();
-  }
+    function buildRSVP(){
+      const wrap = $("rsvpBtns");
 
-  init();
+      if (!CONFIG.telegramUser){
+        $("rsvpHint").textContent = "Telegram пока не указан.";
+        return;
+      }
 
-  const floatersWrap = document.getElementById("floaters");
+      const msg1 = encodeURIComponent(
+        "Лешенька, дорогой, так уж и быть, даю тебе шанс, начинаем обсуждение деталей"
+      );
 
-  function spawnFloater(){
-    const el = document.createElement("div");
-    el.className = "floater";
-    el.textContent = ["🙇🏼","✦","◇","⋆","⟡"][Math.floor(Math.random() * 5)];
+      const msg2 = encodeURIComponent(
+        "Лешенька, ты, конечно, чето в себя поверил, но так уж и быть, обсуждаем"
+      );
 
-    el.style.left = (Math.random() * 100) + "vw";
-    el.style.fontSize = (15 + Math.random() * 18) + "px";
-    el.style.animationDuration = (7 + Math.random() * 7) + "s";
+      function createTGButton(text, message, secondary = false){
+        const tgDeep = `tg://resolve?domain=${CONFIG.telegramUser}&text=${message}`;
+        const tgWeb = `https://t.me/${CONFIG.telegramUser}?text=${message}`;
 
-    floatersWrap.appendChild(el);
-    setTimeout(() => el.remove(), 14000);
-  }
+        const btn = document.createElement("a");
+        btn.className = secondary ? "btn secondary" : "btn";
+        btn.href = tgWeb;
+        btn.textContent = text;
 
-  setInterval(spawnFloater, 950);
-</script>
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.location.href = tgDeep;
+          setTimeout(() => {
+            window.location.href = tgWeb;
+          }, 350);
+        });
+
+        return btn;
+      }
+
+      wrap.appendChild(
+        createTGButton(
+          "🙇🏼 Я согласна на дальнейшие переговоры",
+          msg1
+        )
+      );
+
+      wrap.appendChild(
+        createTGButton(
+          "🤨 А не много ли на себя берешь, последствия вывезешь в случае чего?",
+          msg2,
+          true
+        )
+      );
+
+      $("rsvpHint").textContent =
+        "Telegram просто откроет чат и подставит готовую фразу.";
+    }
+
+    function init(){
+      $("hTitle").textContent = CONFIG.title;
+      $("hSubtitle").textContent = CONFIG.subtitle;
+
+      $("placeName").textContent = CONFIG.city;
+      $("addressLine").textContent = CONFIG.addressLine;
+
+      $("dressText").textContent = CONFIG.dressCode;
+      $("vibeText").textContent = CONFIG.vibe;
+
+      $("btnMaps").href = makeGoogleMapsLink(CONFIG.mapsQuery);
+
+      if (CONFIG.playlistUrl){
+        $("btnPlaylist").href = CONFIG.playlistUrl;
+      } else {
+        $("playlistWrap").style.display = "none";
+      }
+
+      buildRSVP();
+      setupPasswordLock();
+    }
+
+    init();
+
+    const floatersWrap = document.getElementById("floaters");
+
+    function spawnFloater(){
+      const el = document.createElement("div");
+      el.className = "floater";
+      el.textContent = ["🙇🏼","✦","◇","⋆","⟡"][Math.floor(Math.random() * 5)];
+
+      el.style.left = (Math.random() * 100) + "vw";
+      el.style.fontSize = (15 + Math.random() * 18) + "px";
+      el.style.animationDuration = (7 + Math.random() * 7) + "s";
+
+      floatersWrap.appendChild(el);
+      setTimeout(() => el.remove(), 14000);
+    }
+
+    setInterval(spawnFloater, 950);
+  </script>
 </body>
 </html>
