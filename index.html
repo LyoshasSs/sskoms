@@ -220,17 +220,6 @@
       font-size:13px;
     }
 
-    .mode-pill{
-      cursor:pointer;
-      color:var(--text);
-      transition:.2s ease;
-    }
-
-    .mode-pill:hover{
-      transform:translateY(-1px);
-      border-color:rgba(215,199,255,.35);
-    }
-
     .grid{
       margin-top:18px;
       display:grid;
@@ -524,7 +513,6 @@
       <div class="row">
         <span class="pill">🕰 дата: в процессе</span>
         <span class="pill">📍 Екатеринбург</span>
-        <button class="pill mode-pill" id="modeBtn">🎛 режим: спокойный</button>
       </div>
     </div>
 
@@ -801,7 +789,8 @@
         $("playlistWrap").style.display = "none";
       }
 
-      applyMode();
+$("dressText").textContent = CONFIG.dressCodeNormal;
+$("vibeText").textContent = CONFIG.vibeNormal;
       buildRSVP();
       setupPasswordLock();
       setupReveal();
@@ -815,22 +804,6 @@
         });
       });
 
-      $("modeBtn").addEventListener("click", () => {
-        seriousMode = !seriousMode;
-        applyMode();
-
-        $("hSubtitle").textContent = "";
-        $("mainCursor").style.display = "inline-block";
-
-        typeInto(
-          $("hSubtitle"),
-          seriousMode ? CONFIG.subtitleFunny : CONFIG.subtitleNormal,
-          18,
-          () => {
-            $("mainCursor").style.display = "none";
-          }
-        );
-      });
     }
 
     init();
