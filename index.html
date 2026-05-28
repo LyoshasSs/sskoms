@@ -356,91 +356,107 @@
     </footer>
   </div>
 
-  <script>
-    const $ = (id) => document.getElementById(id);
+ <script>
+  const $ = (id) => document.getElementById(id);
 
-    function makeGoogleMapsLink(query){
-      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-    }
-
-   function buildRSVP(){
-  const wrap = $("rsvpBtns");
-
-  if (!CONFIG.telegramUser){
-    $("rsvpHint").textContent = "Telegram пока не указан.";
-    return;
+  function makeGoogleMapsLink(query){
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
   }
 
-  // --- первое сообщение ---
-  const msg1 = encodeURIComponent(
-    "Лешенька, дорогой, так уж и быть, даю тебе шанс, начинаем обсуждение деталей"
-  );
+  function buildRSVP(){
+    const wrap = $("rsvpBtns");
 
-  // --- второе сообщение ---
-  const msg2 = encodeURIComponent(
-    "Лешенька, ты, конечно, чето в себя поверил, но так уж и быть, обсуждаем"
-  );
-
-  // helper для создания tg-кнопок
-  function createTGButton(text, message, secondary = false){
-    const tgDeep = `tg://resolve?domain=${CONFIG.telegramUser}&text=${message}`;
-    const tgWeb = `https://t.me/${CONFIG.telegramUser}?text=${message}`;
-
-    const btn = document.createElement("a");
-    btn.className = secondary ? "btn secondary" : "btn";
-    btn.href = tgWeb;
-    btn.textContent = text;
-
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      window.location.href = tgDeep;
-      setTimeout(() => {
-        window.location.href = tgWeb;
-      }, 350);
-    });
-
-    return btn;
-  }
-
-  // --- кнопка 1 ---
-  wrap.appendChild(
-    createTGButton(
-      "🙇🏼 Я согласна на дальнейшие переговоры",
-      msg1
-    )
-  );
-
-  // --- кнопка 2 ---
-  wrap.appendChild(
-    createTGButton(
-      "🤨 А не много ли на себя берешь, последствия вывезешь в случае чего?",
-      msg2,
-      true
-    )
-  );
-
-  $("rsvpHint").textContent =
-    "Telegram просто откроет чат и подставит готовую фразу.";
-}
-
-    init();
-
-    const floatersWrap = document.getElementById("floaters");
-
-    function spawnFloater(){
-      const el = document.createElement("div");
-      el.className = "floater";
-      el.textContent = ["🙇🏼","✦","◇","⋆","⟡"][Math.floor(Math.random() * 5)];
-
-      el.style.left = (Math.random() * 100) + "vw";
-      el.style.fontSize = (15 + Math.random() * 18) + "px";
-      el.style.animationDuration = (7 + Math.random() * 7) + "s";
-
-      floatersWrap.appendChild(el);
-      setTimeout(() => el.remove(), 14000);
+    if (!CONFIG.telegramUser){
+      $("rsvpHint").textContent = "Telegram пока не указан.";
+      return;
     }
 
-    setInterval(spawnFloater, 950);
-  </script>
+    const msg1 = encodeURIComponent(
+      "Лешенька, дорогой, так уж и быть, даю тебе шанс, начинаем обсуждение деталей"
+    );
+
+    const msg2 = encodeURIComponent(
+      "Лешенька, ты, конечно, чето в себя поверил, но так уж и быть, обсуждаем"
+    );
+
+    function createTGButton(text, message, secondary = false){
+      const tgDeep = `tg://resolve?domain=${CONFIG.telegramUser}&text=${message}`;
+      const tgWeb = `https://t.me/${CONFIG.telegramUser}?text=${message}`;
+
+      const btn = document.createElement("a");
+      btn.className = secondary ? "btn secondary" : "btn";
+      btn.href = tgWeb;
+      btn.textContent = text;
+
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = tgDeep;
+        setTimeout(() => {
+          window.location.href = tgWeb;
+        }, 350);
+      });
+
+      return btn;
+    }
+
+    wrap.appendChild(
+      createTGButton(
+        "🙇🏼 Я согласна на дальнейшие переговоры",
+        msg1
+      )
+    );
+
+    wrap.appendChild(
+      createTGButton(
+        "🤨 А не много ли на себя берешь, последствия вывезешь в случае чего?",
+        msg2,
+        true
+      )
+    );
+
+    $("rsvpHint").textContent =
+      "Telegram просто откроет чат и подставит готовую фразу.";
+  }
+
+  function init(){
+    $("hTitle").textContent = CONFIG.title;
+    $("hSubtitle").textContent = CONFIG.subtitle;
+
+    $("placeName").textContent = CONFIG.city;
+    $("addressLine").textContent = CONFIG.addressLine;
+
+    $("dressText").textContent = CONFIG.dressCode;
+    $("vibeText").textContent = CONFIG.vibe;
+
+    $("btnMaps").href = makeGoogleMapsLink(CONFIG.mapsQuery);
+
+    if (CONFIG.playlistUrl){
+      $("btnPlaylist").href = CONFIG.playlistUrl;
+    } else {
+      $("playlistWrap").style.display = "none";
+    }
+
+    buildRSVP();
+  }
+
+  init();
+
+  const floatersWrap = document.getElementById("floaters");
+
+  function spawnFloater(){
+    const el = document.createElement("div");
+    el.className = "floater";
+    el.textContent = ["🙇🏼","✦","◇","⋆","⟡"][Math.floor(Math.random() * 5)];
+
+    el.style.left = (Math.random() * 100) + "vw";
+    el.style.fontSize = (15 + Math.random() * 18) + "px";
+    el.style.animationDuration = (7 + Math.random() * 7) + "s";
+
+    floatersWrap.appendChild(el);
+    setTimeout(() => el.remove(), 14000);
+  }
+
+  setInterval(spawnFloater, 950);
+</script>
 </body>
 </html>
