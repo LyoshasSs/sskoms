@@ -16,8 +16,10 @@
       --muted2:rgba(255,255,255,.50);
       --accent:#d7c7ff;
       --accent2:#b8fff1;
-      --shadow: 0 20px 60px rgba(0,0,0,.48);
-      --radius: 18px;
+      --bad:#ffb7b7;
+      --good:#b8fff1;
+      --shadow:0 20px 60px rgba(0,0,0,.48);
+      --radius:18px;
     }
 
     *{box-sizing:border-box}
@@ -47,13 +49,13 @@
       position:absolute;
       bottom:-40px;
       opacity:.65;
-      animation: floatUp linear forwards;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+      animation:floatUp linear forwards;
+      filter:drop-shadow(0 10px 18px rgba(0,0,0,.35));
     }
 
     @keyframes floatUp{
-      from{transform:translateY(0) scale(1) rotate(0deg); opacity:.65;}
-      to{transform:translateY(-110vh) scale(1.35) rotate(18deg); opacity:0;}
+      from{transform:translateY(0) scale(1) rotate(0deg);opacity:.65}
+      to{transform:translateY(-110vh) scale(1.35) rotate(18deg);opacity:0}
     }
 
     .lock-screen{
@@ -71,7 +73,7 @@
     }
 
     .lock-card{
-      width:min(520px, 100%);
+      width:min(520px,100%);
       background:var(--card);
       border:1px solid var(--stroke);
       border-radius:24px;
@@ -92,12 +94,12 @@
       display:inline-block;
       width:8px;
       color:var(--accent);
-      animation: blink .8s infinite;
+      animation:blink .8s infinite;
     }
 
     @keyframes blink{
-      0%, 45%{opacity:1;}
-      46%, 100%{opacity:0;}
+      0%,45%{opacity:1}
+      46%,100%{opacity:0}
     }
 
     .password-area{
@@ -107,12 +109,29 @@
 
     .password-area.show{
       display:block;
-      animation: fadeIn .5s ease forwards;
+      animation:fadeIn .5s ease forwards;
     }
 
     @keyframes fadeIn{
-      from{opacity:0; transform:translateY(8px);}
-      to{opacity:1; transform:translateY(0);}
+      from{opacity:0;transform:translateY(8px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    .access-granted{
+      display:none;
+      text-align:center;
+      padding:26px 10px;
+    }
+
+    .access-granted.show{
+      display:block;
+      animation:fadeIn .5s ease forwards;
+    }
+
+    .access-granted h2{
+      margin:0 0 10px;
+      color:var(--good);
+      font-size:24px;
     }
 
     .lock-input{
@@ -130,11 +149,11 @@
     .lock-error{
       margin-top:10px;
       font-size:13px;
-      color:#ffb7b7;
+      color:var(--bad);
       min-height:18px;
     }
 
-    .hidden{display:none !important;}
+    .hidden{display:none!important}
 
     .wrap{
       max-width:860px;
@@ -179,9 +198,10 @@
       font-size:15px;
       line-height:1.55;
       max-width:620px;
+      min-height:48px;
     }
 
-    .row{
+    .row,.btns,.mystery-count{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
@@ -203,7 +223,7 @@
     .grid{
       margin-top:18px;
       display:grid;
-      grid-template-columns:repeat(12, 1fr);
+      grid-template-columns:repeat(12,1fr);
       gap:14px;
     }
 
@@ -217,10 +237,10 @@
       backdrop-filter:blur(10px);
     }
 
-    .two{grid-column:span 12;}
+    .two{grid-column:span 12}
 
     @media (min-width:760px){
-      .two{grid-column:span 6;}
+      .two{grid-column:span 6}
     }
 
     .card h2{
@@ -235,7 +255,7 @@
       line-height:1.65;
     }
 
-    .kv b{color:rgba(255,255,255,.92);}
+    .kv b{color:rgba(255,255,255,.92)}
 
     .sep{
       height:1px;
@@ -243,19 +263,16 @@
       margin:12px 0;
     }
 
-    .small{
+    .small,.status{
       font-size:12px;
       color:var(--muted2);
       line-height:1.5;
       margin:0;
     }
 
-    .mystery-count{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
+    .status{margin-top:8px;font-size:13px}
+
+    .mystery-count{margin-top:10px}
 
     .mystery-box{
       min-width:120px;
@@ -263,12 +280,18 @@
       border-radius:14px;
       border:1px solid var(--stroke);
       background:rgba(255,255,255,.05);
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .mystery-box:hover{
+      transform:translateY(-2px);
+      border-color:rgba(215,199,255,.35);
     }
 
     .question{
       font-size:25px;
       font-weight:800;
-      letter-spacing:.2px;
       color:var(--accent);
     }
 
@@ -278,22 +301,23 @@
       margin-top:2px;
     }
 
-    a{
-      color:var(--accent);
-      text-decoration:none;
+    .hint{
+      display:none;
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px dashed rgba(215,199,255,.28);
+      background:rgba(215,199,255,.08);
+      color:var(--muted);
+      line-height:1.55;
     }
 
-    a:hover{
-      opacity:.9;
-      text-decoration:underline;
-    }
+    .hint.show{display:block;animation:fadeIn .35s ease forwards}
 
-    .btns{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
+    a{color:var(--accent);text-decoration:none}
+    a:hover{opacity:.9;text-decoration:underline}
+
+    .btns{margin-top:10px}
 
     .btn{
       appearance:none;
@@ -309,6 +333,7 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
+      transition:.2s ease;
     }
 
     .btn.secondary{
@@ -322,10 +347,33 @@
       text-decoration:none;
     }
 
-    .status{
-      margin-top:8px;
-      font-size:13px;
-      color:var(--muted2);
+    .protocol{
+      margin:10px 0 0;
+      padding-left:20px;
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    .status-grid{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .status-item{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.045);
+      border:1px solid var(--stroke);
+      color:var(--muted);
+    }
+
+    .status-item b{
+      color:var(--text);
+      font-weight:650;
     }
 
     footer{
@@ -341,27 +389,28 @@
 
   <div class="lock-screen" id="lockScreen">
     <div class="lock-card">
-      <div class="badge">🔐 контрольный пункт</div>
-      <h1 style="font-size:24px;">Доступ ограничен</h1>
+      <div id="lockContent">
+        <div class="badge">🔐 контрольный пункт</div>
+        <h1 style="font-size:24px;">Доступ ограничен</h1>
 
-      <div class="type-text">
-        <span id="typedText"></span><span class="cursor">|</span>
-      </div>
-
-      <div class="password-area" id="passwordArea">
-        <input
-          class="lock-input"
-          id="passwordInput"
-          type="password"
-          placeholder="Введите пароль…"
-          autocomplete="off"
-        />
-
-        <div class="btns">
-          <button class="btn" id="unlockBtn">Открыть приглашение</button>
+        <div class="type-text">
+          <span id="typedText"></span><span class="cursor">|</span>
         </div>
 
-        <div class="lock-error" id="lockError"></div>
+        <div class="password-area" id="passwordArea">
+          <input class="lock-input" id="passwordInput" type="password" placeholder="Введите пароль…" autocomplete="off" />
+
+          <div class="btns">
+            <button class="btn" id="unlockBtn">Открыть приглашение</button>
+          </div>
+
+          <div class="lock-error" id="lockError"></div>
+        </div>
+      </div>
+
+      <div class="access-granted" id="accessGranted">
+        <h2>Доступ к переговорам одобрен.</h2>
+        <p class="kv">Веди себя уверенно, но не слишком. Сейчас откроем основной протокол.</p>
       </div>
     </div>
   </div>
@@ -370,14 +419,18 @@
     <script>
       const CONFIG = {
         title: "Есть один план 🙇🏼",
-        subtitle: "Без лишнего шума. Просто маленький повод увидеться не через экран — и понять, как разговор звучит вживую.",
+        subtitleNormal: "Без лишнего шума. Просто маленький повод увидеться не через экран — и понять, как разговор звучит вживую.",
+        subtitleFunny: "Официально заявляю: это не свидание. Это предварительное заседание комиссии по оценке взаимного интереса.",
 
         city: "Екатеринбург",
         addressLine: "точку на карте выберем вместе",
         mapsQuery: "Екатеринбург",
 
-        dressCode: "Как тебе будет комфортно. Без дресс-кода и лишней официальности — просто в своём вайбе.",
-        vibe: "Лёгкая встреча, нормальный разговор, немного спонтанности и ощущение, что всё происходит вовремя.",
+        dressCodeNormal: "Как тебе будет комфортно. Без дресс-кода и лишней официальности — просто в своём вайбе.",
+        dressCodeFunny: "Форма одежды: свободная. Степень очаровательности: на твоё усмотрение, но подозреваю, что там и без подготовки всё нормально.",
+
+        vibeNormal: "Лёгкая встреча, нормальный разговор, немного спонтанности и ощущение, что всё происходит вовремя.",
+        vibeFunny: "Переговоры без галстуков, но с возможными последствиями в виде хорошего вечера.",
 
         playlistUrl: "https://music.yandex.com/album/22219022/track/103708380?ref_id=D99B554F-C9D4-4D02-875A-375B8DA665E4&utm_medium=copy_link",
 
@@ -390,8 +443,9 @@
       <div>
         <div class="badge">✦ небольшая вводная перед переговорами ✦</div>
         <h1 id="hTitle">Есть один план 🙇🏼</h1>
-        <p class="sub" id="hSubtitle"></p>
+        <p class="sub"><span id="hSubtitle"></span><span class="cursor" id="mainCursor">|</span></p>
       </div>
+
       <div class="row">
         <span class="pill">🕰 дата: в процессе</span>
         <span class="pill">📍 Екатеринбург</span>
@@ -407,10 +461,14 @@
         </p>
 
         <div class="mystery-count">
-          <div class="mystery-box"><div class="question">?</div><div class="lbl">дней</div></div>
-          <div class="mystery-box"><div class="question">?</div><div class="lbl">часов</div></div>
-          <div class="mystery-box"><div class="question">?</div><div class="lbl">минут</div></div>
-          <div class="mystery-box"><div class="question">?</div><div class="lbl">секунд</div></div>
+          <div class="mystery-box secret-q"><div class="question">?</div><div class="lbl">дней</div></div>
+          <div class="mystery-box secret-q"><div class="question">?</div><div class="lbl">часов</div></div>
+          <div class="mystery-box secret-q"><div class="question">?</div><div class="lbl">минут</div></div>
+          <div class="mystery-box secret-q"><div class="question">?</div><div class="lbl">секунд</div></div>
+        </div>
+
+        <div class="hint" id="timerHint">
+          Терпение. Хорошие планы не любят спешку. Особенно когда по ним ещё не завершены переговоры.
         </div>
       </div>
 
@@ -441,10 +499,38 @@
       </div>
 
       <div class="card">
+        <h2>📊 Статус плана</h2>
+        <div class="status-grid">
+          <div class="status-item"><span>Степень готовности</span><b>интригующая</b></div>
+          <div class="status-item"><span>Риск неловкого молчания</span><b>контролируемый</b></div>
+          <div class="status-item"><span>Вероятность хорошего вечера</span><b>подозрительно высокая</b></div>
+          <div class="status-item"><span>Уровень официальности</span><b>почти нулевой</b></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📄 Протокол переговоров</h2>
+        <ol class="protocol">
+          <li>Выбрать дату, когда никто не изображает занятость мирового уровня.</li>
+          <li>Согласовать место без лишней бюрократии.</li>
+          <li>Не душнить. Или душнить, но дозированно.</li>
+          <li>Встретиться и сделать вид, что всё это было максимально спонтанно.</li>
+        </ol>
+      </div>
+
+      <div class="card">
         <h2>🌙 Вайб</h2>
         <p class="kv" id="vibeText"></p>
         <div class="btns" id="playlistWrap">
           <a class="btn secondary" id="btnPlaylist" href="#" target="_blank" rel="noopener">🎶 Саундтрек к плану</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🎛 Режим серьёзности</h2>
+        <p class="kv" id="modeText">Сейчас включён сбалансированный режим: достаточно спокойно, но с подозрительной долей самоуверенности.</p>
+        <div class="btns">
+          <button class="btn secondary" id="modeBtn">Переключить режим</button>
         </div>
       </div>
 
@@ -463,13 +549,33 @@
 
   <script>
     const $ = (id) => document.getElementById(id);
+    let seriousMode = false;
 
     function normalizePassword(value){
       return value.trim().toLowerCase().replace(/ё/g, "е").replace(/\s+/g, " ");
     }
 
+    function typeInto(element, text, speed = 28, done){
+      element.textContent = "";
+      let i = 0;
+
+      function step(){
+        if (i < text.length){
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(step, speed);
+        } else if (done){
+          done();
+        }
+      }
+
+      step();
+    }
+
     function setupPasswordLock(){
       const lockScreen = $("lockScreen");
+      const lockContent = $("lockContent");
+      const accessGranted = $("accessGranted");
       const typedText = $("typedText");
       const passwordArea = $("passwordArea");
       const input = $("passwordInput");
@@ -478,33 +584,28 @@
 
       const introText = "На случай твоего излишнего любопытства раньше времени — тут тоже запоролил, не стоит аплодисментов, рад стараться. За паролем обращайся в личку, а пока чао персик, дозревай.";
 
-      if (localStorage.getItem("inviteUnlocked_v2") === "yes"){
+      if (localStorage.getItem("inviteUnlocked_v3") === "yes"){
         lockScreen.classList.add("hidden");
         return;
       }
 
-      let i = 0;
-
-      function type(){
-        if (i < introText.length){
-          typedText.textContent += introText.charAt(i);
-          i++;
-          setTimeout(type, 38);
-        } else {
-          passwordArea.classList.add("show");
-          input.focus();
-        }
-      }
-
-      type();
+      typeInto(typedText, introText, 38, () => {
+        passwordArea.classList.add("show");
+        input.focus();
+      });
 
       function unlock(){
         const entered = normalizePassword(input.value);
         const correct = normalizePassword(CONFIG.password);
 
         if (entered === correct){
-          localStorage.setItem("inviteUnlocked_v2", "yes");
-          lockScreen.classList.add("hidden");
+          lockContent.classList.add("hidden");
+          accessGranted.classList.add("show");
+
+          setTimeout(() => {
+            localStorage.setItem("inviteUnlocked_v3", "yes");
+            lockScreen.classList.add("hidden");
+          }, 1800);
         } else {
           error.textContent = "Пароль не тот. Персик пока не дозрел.";
           input.value = "";
@@ -513,7 +614,6 @@
       }
 
       btn.addEventListener("click", unlock);
-
       input.addEventListener("keydown", (e) => {
         if (e.key === "Enter") unlock();
       });
@@ -525,11 +625,6 @@
 
     function buildRSVP(){
       const wrap = $("rsvpBtns");
-
-      if (!CONFIG.telegramUser){
-        $("rsvpHint").textContent = "Telegram пока не указан.";
-        return;
-      }
 
       const msg1 = encodeURIComponent(
         "Лешенька, дорогой, так уж и быть, даю тебе шанс, начинаем обсуждение деталей"
@@ -559,6 +654,8 @@
         return btn;
       }
 
+      wrap.innerHTML = "";
+
       wrap.appendChild(
         createTGButton(
           "🙇🏼 Я согласна на дальнейшие переговоры",
@@ -574,20 +671,32 @@
         )
       );
 
-      $("rsvpHint").textContent =
-        "Telegram просто откроет чат и подставит готовую фразу.";
+      $("rsvpHint").textContent = "Telegram просто откроет чат и подставит готовую фразу.";
+    }
+
+    function applyMode(){
+      if (seriousMode){
+        $("dressText").textContent = CONFIG.dressCodeFunny;
+        $("vibeText").textContent = CONFIG.vibeFunny;
+        $("modeText").textContent = "Режим серьёзности выключен. Протокол ведётся с лёгкой наглостью, но в пределах допустимого.";
+        $("modeBtn").textContent = "Вернуть спокойный режим";
+      } else {
+        $("dressText").textContent = CONFIG.dressCodeNormal;
+        $("vibeText").textContent = CONFIG.vibeNormal;
+        $("modeText").textContent = "Сейчас включён сбалансированный режим: достаточно спокойно, но с подозрительной долей самоуверенности.";
+        $("modeBtn").textContent = "Переключить режим";
+      }
     }
 
     function init(){
       $("hTitle").textContent = CONFIG.title;
-      $("hSubtitle").textContent = CONFIG.subtitle;
+
+      typeInto($("hSubtitle"), CONFIG.subtitleNormal, 24, () => {
+        $("mainCursor").style.display = "none";
+      });
 
       $("placeName").textContent = CONFIG.city;
       $("addressLine").textContent = CONFIG.addressLine;
-
-      $("dressText").textContent = CONFIG.dressCode;
-      $("vibeText").textContent = CONFIG.vibe;
-
       $("btnMaps").href = makeGoogleMapsLink(CONFIG.mapsQuery);
 
       if (CONFIG.playlistUrl){
@@ -596,8 +705,20 @@
         $("playlistWrap").style.display = "none";
       }
 
+      applyMode();
       buildRSVP();
       setupPasswordLock();
+
+      document.querySelectorAll(".secret-q").forEach((box) => {
+        box.addEventListener("click", () => {
+          $("timerHint").classList.toggle("show");
+        });
+      });
+
+      $("modeBtn").addEventListener("click", () => {
+        seriousMode = !seriousMode;
+        applyMode();
+      });
     }
 
     init();
@@ -608,7 +729,6 @@
       const el = document.createElement("div");
       el.className = "floater";
       el.textContent = ["🙇🏼","✦","◇","⋆","⟡"][Math.floor(Math.random() * 5)];
-
       el.style.left = (Math.random() * 100) + "vw";
       el.style.fontSize = (15 + Math.random() * 18) + "px";
       el.style.animationDuration = (7 + Math.random() * 7) + "s";
