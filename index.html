@@ -454,7 +454,7 @@
   <div class="lock-screen" id="lockScreen">
     <div class="lock-card">
       <div id="lockContent">
-        <div class="badge">🔐 контрольный пункт</div>
+        <div class="badge">🔐 контрольный пункт 🔐</div>
         <h1 style="font-size:24px;">Доступ ограничен</h1>
 
         <div class="type-text">
@@ -473,8 +473,8 @@
       </div>
 
       <div class="access-granted" id="accessGranted">
-        <h2>Доступ к переговорам одобрен.</h2>
-        <p class="kv">Веди себя уверенно, но не слишком. Сейчас откроем основной протокол.</p>
+        <h2>Доступ к переговорам одобрен</h2>
+        <p class="kv">Веди себя уверенно, но не слишком! Сейчас откроется основной протокол</p>
       </div>
     </div>
   </div>
@@ -651,7 +651,7 @@
       const btn = $("unlockBtn");
       const error = $("lockError");
 
-      const introText = "На случай твоего излишнего любопытства раньше времени — тут тоже запоролил, не стоит аплодисментов, рад стараться. За паролем обращайся в личку, а пока чао персик, дозревай.";
+      const introText = "На случай твоего излишнего любопытства раньше времени — тут тоже запоролил, не стоит аплодисментов, рад стараться! За паролем обращайся в личку, а пока что чао персик, дозревай!";
 
       if (localStorage.getItem("inviteUnlocked_v3") === "yes"){
         lockScreen.classList.add("hidden");
